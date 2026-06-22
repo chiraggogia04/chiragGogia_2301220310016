@@ -1,83 +1,96 @@
+MIDDLE OF LINKED LIST
 class Solution {
 public:
-    void sortColors(vector<int>& nums) {
-        int low = 0, mid = 0, high = nums.size() - 1;
+    ListNode* middleNode(ListNode* head) {
+        ListNode* slow = head;
+        ListNode* fast = head;
 
-        while (mid <= high) {
-            if (nums[mid] == 0) {
-                swap(nums[low], nums[mid]);
-                low++;
-                mid++;
-            }
-            else if (nums[mid] == 1) {
-                mid++;
-            }
-            else { // nums[mid] == 2
-                swap(nums[mid], nums[high]);
-                high--;
-            }
+        while (fast != NULL && fast->next != NULL) {
+            slow = slow->next;
+            fast = fast->next->next;
         }
+
+        return slow;
     }
 };
-________________________________________________________________________________________________________________________
-LINEAR SEARCH 
-for(i=0;i<n;i++){
-if(a[i]==elem)
-return i;
-}
-_________________________________________________________________________________________________________________________
- BINARY SEARCH
-l=0
-h=size-1
-while(l<=h){
-int mid=(l+h)/2
-if (a[mid]==target)
-return mid;
-elseif(a[mid]>>target)h=mid-1
-else
-l=mid+1
-}
-________________________________________________________________________________________________________________________
+_________________________________________________________________________________________________________________________________________--
+DELETE A NODE
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+
 class Solution {
 public:
-    int search(vector<int>& nums, int target) {
-        int l = 0;
-        int h = nums.size() - 1;
-
-        while (l <= h) {
-            int mid = l + (h - l) / 2;
-
-            if (nums[mid] == target)
-                return mid;
-            else if (nums[mid] > target)
-                h = mid - 1;
-            else
-                l = mid + 1;
-        }
-
-        return -1;
+    void deleteNode(ListNode* node) {
+        node->val = node->next->val;
+        ListNode* temp = node->next;
+        node->next = node->next->next;
+        delete temp;
     }
 };
-_________________________________________________________________________________________________________________________
-INSERTION
+______________________________________________________________________________________________________________________________________________
+LINKED LIST CYCLE 
 class Solution {
 public:
-    int searchInsert(vector<int>& nums, int target) {
-        int l = 0;
-        int h = nums.size() - 1;
+    bool hasCycle(ListNode *head) {
+        ListNode *slow = head;
+        ListNode *fast = head;
 
-        while (l <= h) {
-            int mid = l + (h - l) / 2;
+        while (fast != NULL && fast->next != NULL) {
+            slow = slow->next;           
+            fast = fast->next->next;     
 
-            if (nums[mid] == target)
-                return mid;
-            else if (nums[mid] > target)
-                h = mid - 1;
-            else
-                l = mid + 1;
+            if (slow == fast) {
+                return true;             
+            }
         }
 
-        return l;
+        return false;                    
     }
 };
-___________________________________________________________________________________________________________________________
+________________________________________________________________________________________________________________________________________________
+PALINDROME LINKED LIST 
+
+class Solution {
+public:
+    ListNode* reverse(ListNode* head) {
+        ListNode* prev = nullptr;
+        while (head) {
+            ListNode* nextNode = head->next;
+            head->next = prev;
+            prev = head;
+            head = nextNode;
+        }
+        return prev;
+    }
+
+    bool isPalindrome(ListNode* head) {
+        if (head == nullptr || head->next == nullptr)
+            return true;
+
+        ListNode* slow = head;
+        ListNode* fast = head;
+
+        while (fast && fast->next) {
+            slow = slow->next;
+            fast = fast->next->next;
+        }
+
+        ListNode* second = reverse(slow);
+        ListNode* first = head;
+
+        while (second) {
+            if (first->val != second->val)
+                return false;
+            first = first->next;
+            second = second->next;
+        }
+
+        return true;
+    }
+};
